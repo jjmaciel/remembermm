@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'images/favicon.png' %}">
+    <link href="{% static '/css/bootstrap.css' %}" rel="stylesheet">
+    <link href="{% static '/css/style.css' %}" rel="stylesheet">
+
+
+    <title>MM-Remember</title>
+</head>
+
+<body>
+    <div class="row">
+        <div class="col-md-12">
+            <img class="img-fluid" src="{% static 'images/banner-top.png' %}"
+        </div>
+    </div>
+
+<div class="container">
+
+<!-- FORMULÁRIO PARA FAZER O CADASTRO DOS DADOS -->  
+    <div class="row">
+        <div class="col-md-10 offset-md-2 margin-top">
+            <form method="POST" class="form-horizontal">
+                {% csrf_token %}
+
+                <div class="form-group row input-data">
+                    <label class="col-md-2 text-right control-label col-form-label">Nome</label>
+                    <div class="col-md-7">
+                        <span class="text-danger">{{ form_personal_data.name.errors }}</span>
+                        {{ form_personal_data.name }}
+                    </div>
+                </div>
+
+                <div class="form-group row input-data">
+                    <label class="col-md-2 text-right control-label col-form-label">Email</label>
+                    <div class="col-md-7">
+                        <span class="text-danger">{{ form_personal_data.email.errors }}</span>
+                        {{ form_personal_data.email }}
+                    </div>
+                </div>
+
+                <div class="form-group row input-data">
+                    <label class="col-md-2 text-right control-label col-form-label">Telefone</label>
+                    <div class="col-md-7">
+                        <span class="text-danger">{{ form_personal_data.phone.errors }}</span>
+                        {{ form_personal_data.phone }}
+                    </div>
+                </div>
+
+                <div class="form-group row input-data">
+                    <div class="col-md-6 offset-md-3">
+                        <button class="btn btn-success col-md-7" >Salvar Dados</button>
+                        <span class="icons" onclick="search()">&#128269;</span>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <!-- col-md-10 offset-md-2 margin-top -->
+    </div>
+    <!-- row -->
+<!-- FIM DO FORMULÁRIO  DE CADASTRO DE DADOS-->
+    <hr/>
+
+
+<!-- QUANDO O BOTÃO DE DELETE É PRECIONADO ESSA MENSAGEM É EXIBIDA. A VISUALIZAÇÃO FICA POR CONTA DA 
+VÁRIAVEL confirm_delete ENVIADA PELA VIEW. SE ELA EXISTIR, ENTÃO É EXIBIDO A MENSAGEM, SENÃO É EXIBIDO A LISTSA
+DE REGISTROS CADASTRADO NO BANCO DE DADOS -->
+{% if confirm_delete %}
+    
+        <div class="row red-row height-row margin-top">
+            <div class="col-md-8 offset-md-1 ">
+                
+                Você realmente deseja deletar os dados de: <strong>{{ personal_data.name }}</strong>
+
+            </div>
+            <div class="col-md-1">
+                <form method="POST" id="delete-register">
+                    {% csrf_token %}
+                    <button  type="submit" class="btn btn-success">SIM</button>
+                </form>
+            </div>
+            <div class="col-md-1">
+                <a href="{% url 'home' %}"><button class="btn btn-danger">NÃO</button></a>
+            </div>
+        </div>
+        <!-- row -->
+    
+{% else %}
+
+<!-- LISTA DE REGISTROS CADASTRADA NO BANCO DE DADOS -->
+    <div class="row">
+        <div class="col-md-10 offset-md-1 margin-top">
+            {% for i in personal_data_all %}
+            <div class="row green-row">
+                <div class="col-md-5">
+                    {{ i.id }} - {{ i.name }}
+                </div>
+                <div class="col-md-3">
+                    {{ i.email }}
+                </div>
+                <div class="col-md-2">
+                    {{ i.phone }}
+                </div>
+                <div class="col-md-2">
+                    <a href="{% url 'edit-data' i.id %}"><button class="btn-clean">&#128394;</button></a>
+                    <a href="{% url 'remove-data' i.id %}"><button class="btn-clean">&#128465;</button></a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <!-- col-md-10 offset-md-2 margin-top -->
+    </div>
+    <!-- row -->
+
+{% endif %}
+
+</div>
+<!-- container -->
+
+    <script src="{% static 'js/script.js' %}"></script>
+
+</body>
+
+</html>
